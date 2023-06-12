@@ -4,35 +4,67 @@ internal class Program
 {
     private static void Main(string[] args)
     {
-        var sensor = new Sensor();
+        var sensor = new Sensor
+        {
+            Name = "Humidity 1"
+        };
 
-        sensor._newMesswert += LogMesswert;
-        sensor._newMesswert += GebeMesswertAus;
-        sensor._newMesswert -= LogMesswert;
-
+        sensor.NewMesswert += LogMesswert;
+        //sensor.NewMesswert += GebeMesswertAus;
+        //sensor.NewMesswert -= LogMesswert;
 
         sensor.Messe();
     }
 
-    private static void LogMesswert(double wert)
+    private static void LogMesswert(object sender, NewMesswertEventArgs args)
     {
-        File.WriteAllText("values.txt", wert + "\n");
+        File.WriteAllText("values.txt", args.Wert + "\n");
     }
 
-    private static void GebeMesswertAus(double wert)
+    private static void GebeMesswertAus(object sender, NewMesswertEventArgs args)
     {
-        Console.WriteLine($"Neuer Messwert {wert}");
+        var sensor = sender as Sensor;
+        Console.WriteLine($"Neuer Messwert {sensor.Name}: {args.Wert} mit Genuaigkeit {args.Genauigkeit}");
     }
 }
 
-public delegate void NewMesswertHandler(double wert);
-
-internal class Sensor
+public class NewMesswertEventArgs
 {
-    public NewMesswertHandler _newMesswert;
+    public double Wert { get; set; }
+    public double Genauigkeit { get; set; }
+}
+
+public class Sensor
+{
+    public int Id { get; set; }
+
+    public string Name { get; set; }
+
+    // Auto Property
+    public string Position { get; set; }
+
+    // Auto Event
+    public event EventHandler<NewMesswertEventArgs> NewMesswert;
 
     public void Messe()
     {
-        _newMesswert(1.23d);
+        OnNewMesswert(1.23d, 3.45d);
+    }
+
+    protected void OnNewMesswert(double wert, double genauigkeit)
+    {
+        NewMesswert?.Invoke(this, new NewMesswertEventArgs
+        {
+            Wert = wert,
+            Genauigkeit = genauigkeit
+        });
+    }
+}
+
+public class LightSensor : Sensor
+{
+    public void Messe()
+    {
+        OnNewMesswert(3.45d, 5.67d);
     }
 }

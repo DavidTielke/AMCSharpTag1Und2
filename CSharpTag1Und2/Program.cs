@@ -1,5 +1,19 @@
 ﻿namespace DelegatesUndEvents;
 
+public class Person
+{
+    // ...
+
+    public Person(int id, string name)
+    {
+        Id = id;
+        Name = name;
+    }
+
+    public int Id { get; set; }
+    public string Name { get; set; }
+}
+
 public class Program
 {
     // Übung 1:
@@ -11,17 +25,39 @@ public class Program
 
     public static void Main()
     {
-        var del1 = new Action(MyHandler);
-        del1();
+        var names = new[] { "Lisa", "Maximlian", "Lena", "David" };
 
-        var del2 = new Action<double>(MyHandler);
-        del2(1.23);
+        // Anonyme Methode
+        var del1 = delegate(string name) { return name.Contains("i"); };
 
-        var del3 = new Func<int, int, long>(Add);
-        var sum = del3(1, 2);
+        // Lambda Ausdrücke
+        Func<string, bool> del2 = name => { return name.Contains("i"); };
+        Func<string, bool> del3 = name => { return name.Contains("i"); };
+        Func<string, bool> del4 = name => { return name.Contains("i"); };
+        Func<string, bool> del5 = name => name.Contains("i");
 
-        var del4 = new Func<string, bool>(IsValid);
-        var isValid = del4("David");
+
+        var namesWithI = names
+            .Where(NameContainsAnI);
+        Console.WriteLine(namesWithI.Count());
+
+
+        var persons = new List<Person>
+        {
+            new(3, "David"),
+            new(2, "Lena"),
+            new(4, "Maximilian"),
+            new(1, "Lisa")
+        };
+
+        var personDict = persons
+            .OrderBy(p => p.Id)
+            .ToDictionary(p => p.Id, p => p);
+    }
+
+    public static bool NameContainsAnI(string name)
+    {
+        return name.Contains("i");
     }
 
     public static bool IsValid(string name)
