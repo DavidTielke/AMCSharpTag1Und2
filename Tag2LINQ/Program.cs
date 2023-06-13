@@ -6,16 +6,16 @@ internal class Person
     {
     }
 
-    public Person(int id, string name, int alter)
+    public Person(int id, string name, int age)
     {
         Id = id;
         Name = name;
-        Alter = alter;
+        Age = age;
     }
 
     public int Id { get; set; }
     public string Name { get; set; }
-    public int Alter { get; set; }
+    public int Age { get; set; }
 }
 
 internal class Program
@@ -29,11 +29,12 @@ internal class Program
             new(3, "Maximilian", 12),
             new(4, "Lisa", 0),
             new(5, "Teddy", 8),
-            new(5, "Teddy", 8)
+            new(5, "Teddy2", 8)
         };
 
-        var aldults = persons
-            .Select(p => p.Name)
-            .Distinct();
+        // Alle Personen die Älter als 20 Jahre sind, sortiert nach Name, nur die ID ausgeben
+        // Maximale und minimale ALter von Personen
+        // Alle Personen, gruppiert nach Länge ihres Vornamens
+        // Nur die letzten beiden Personen
     }
 }
