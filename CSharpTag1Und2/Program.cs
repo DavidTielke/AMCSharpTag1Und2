@@ -38,7 +38,7 @@ public class Program
 
 
         var namesWithI = names
-            .Where(NameContainsAnI);
+            .Where(del5);
         Console.WriteLine(namesWithI.Count());
 
 

@@ -9,9 +9,12 @@ internal class Program
             Name = "Humidity 1"
         };
 
-        sensor.NewMesswert += LogMesswert;
-        //sensor.NewMesswert += GebeMesswertAus;
-        //sensor.NewMesswert -= LogMesswert;
+        sensor.NewMesswert += (_, e) => File.WriteAllText("values.txt", e.Wert + "\n");
+        sensor.NewMesswert += (s, e) =>
+        {
+            var sensor = s as Sensor;
+            Console.WriteLine($"Neuer Messwert {sensor.Name}: {e.Wert} mit Genuaigkeit {e.Genauigkeit}");
+        };
 
         sensor.Messe();
     }
